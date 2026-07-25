@@ -1,18 +1,16 @@
 import { collection, config, fields } from "@keystatic/core";
 
-const isDev = process.env.NODE_ENV === "development";
-const useGitHub =
-  !isDev && Boolean(process.env.KEYSTATIC_GITHUB_CLIENT_ID);
-
+// NODE_ENV is inlined at build time in both server and client bundles,
+// so this stays consistent everywhere (a server-only env var would be
+// undefined in the browser and silently fall back to local mode).
 export default config({
-  storage: useGitHub
-    ? {
-        kind: "github",
-        repo: "maazshakeel/maaz_homepage",
-      }
-    : {
-        kind: "local",
-      },
+  storage:
+    process.env.NODE_ENV === "development"
+      ? { kind: "local" }
+      : {
+          kind: "github",
+          repo: "maazshakeel/maaz_homepage",
+        },
   collections: {
     posts: collection({
       label: "Posts",
