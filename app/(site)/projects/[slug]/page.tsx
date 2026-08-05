@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { CaseStudyTabs } from "@/components/projects/CaseStudyTabs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildCreativeWork } from "@/lib/jsonld";
 import { getAllProjectSlugs, getProjectBySlug } from "@/lib/projects";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   }
 
   return {
-    title: `${project.title} — Project`,
+    title: `${project.title} — Case Study`,
     description: project.description,
     openGraph: {
       title: project.title,
@@ -66,6 +67,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {project.role ? <span>{project.role}</span> : null}
             {project.role && project.year ? <span aria-hidden="true">·</span> : null}
             {project.year ? <span>{project.year}</span> : null}
+            <span aria-hidden="true">·</span>
+            <span className="font-medium text-accent">Case study</span>
           </div>
 
           <h1 className="mt-3 text-4xl font-bold tracking-tight text-ink md:text-5xl">
@@ -113,22 +116,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="mt-10 aspect-[2/1] rounded-2xl border border-border bg-gradient-to-br from-accent-soft via-surface to-border" />
         )}
 
-        <div className="mt-12 grid gap-8 md:grid-cols-[1.2fr_0.8fr]">
-          <section className="sketch-card p-8">
-            <h2 className="text-2xl font-bold text-ink">Overview</h2>
-            <p className="mt-4 text-base leading-7 text-muted">{project.overview}</p>
-          </section>
+        <CaseStudyTabs project={project} />
 
-          <section className="yellow-card p-8">
-            <h2 className="text-2xl font-bold text-ink">Highlights</h2>
-            <ul className="mt-4 space-y-3 text-sm leading-6 text-muted">
-              {project.highlights.map((item) => (
-                <li key={item} className="border-b border-border/70 pb-3 last:border-b-0 last:pb-0">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </section>
+        <div className="mt-10 yellow-card p-6 md:p-8">
+          <h2 className="text-lg font-bold text-ink">Quick snapshot</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">{project.caseStudy.problem}</p>
+          <p className="mt-4 text-sm font-semibold text-ink">→ {project.caseStudy.result}</p>
         </div>
       </div>
     </article>

@@ -1,10 +1,20 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { useTheme } from "@/components/theme/ThemeProvider";
 
 type HeroPillarCardProps = {
   label: string;
   description: string;
+  /** Light-mode idle image */
   src: string;
+  /** Dark-mode idle image */
+  srcDark?: string;
+  /** Light-mode hover image */
   colorSrc: string;
+  /** Dark-mode hover image */
+  colorSrcDark?: string;
   width: number;
   height: number;
 };
@@ -13,15 +23,30 @@ export function HeroPillarCard({
   label,
   description,
   src,
+  srcDark,
   colorSrc,
+  colorSrcDark,
   width,
   height,
 }: HeroPillarCardProps) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  const idleSrc = isDark && srcDark ? srcDark : src;
+  const hoveredSrc = isDark && colorSrcDark ? colorSrcDark : colorSrc;
+
   return (
-    <article className="group sketch-card flex h-full flex-col gap-4 p-5 transition duration-300 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--shadow)] md:p-6">
+    <motion.article
+      data-cursor="hover"
+      className="group sketch-card flex h-full flex-col gap-4 p-5 md:p-6"
+      whileHover={{ y: -4, boxShadow: "6px 6px 0 var(--shadow)" }}
+      transition={{ type: "spring", stiffness: 360, damping: 24 }}
+    >
       <div className="relative inline-flex self-start">
+        {/* Idle image — fades out on hover */}
         <Image
-          src={src}
+          key={idleSrc}
+          src={idleSrc}
           alt=""
           width={width}
           height={height}
@@ -29,8 +54,10 @@ export function HeroPillarCard({
           className="h-14 w-auto object-contain transition duration-300 group-hover:opacity-0 md:h-16"
           draggable={false}
         />
+        {/* Hovered image — fades in on hover */}
         <Image
-          src={colorSrc}
+          key={hoveredSrc}
+          src={hoveredSrc}
           alt=""
           width={width}
           height={height}
@@ -46,6 +73,6 @@ export function HeroPillarCard({
         </h3>
         <p className="mt-1.5 text-sm leading-relaxed text-muted">{description}</p>
       </div>
-    </article>
+    </motion.article>
   );
 }

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { themeInitScript } from "@/lib/theme-script";
 import { site } from "@/data/site";
 import { getSiteUrl } from "@/lib/jsonld";
 import "./globals.css";
@@ -67,7 +70,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full">
-        {children}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
+        <ThemeProvider>{children}</ThemeProvider>
         <Analytics />
       </body>
     </html>
